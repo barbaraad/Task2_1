@@ -1,0 +1,65 @@
+//Добавить файлы в HDFS
+[cloudera@quickstart ~]$ hadoop fs -copyFromLocal /media/sf_Task_3/vim1.txt /hdfs/vim1.txt
+[cloudera@quickstart ~]$
+[cloudera@quickstart ~]$ hadoop fs -copyFromLocal /media/sf_Task_3/vim2.txt /hdfs/vim2.txt
+[cloudera@quickstart ~]$
+[cloudera@quickstart ~]$ hadoop fs -copyFromLocal /media/sf_Task_3/vim3.txt /hdfs/vim3.txt
+[cloudera@quickstart ~]$
+[cloudera@quickstart ~]$ hadoop fs -copyFromLocal /media/sf_Task_3/vim4.txt /hdfs/vim4.txt
+[cloudera@quickstart ~]$
+
+//Посмотреть содержимое папки
+[cloudera@quickstart ~]$ hadoop fs -ls /hdfs
+Found 4 items
+-rw-r--r--   1 cloudera supergroup     736519 2022-11-22 08:09 /hdfs/vim1.txt
+-rw-r--r--   1 cloudera supergroup     736519 2022-11-22 08:10 /hdfs/vim2.txt
+-rw-r--r--   1 cloudera supergroup     736519 2022-11-22 08:10 /hdfs/vim3.txt
+-rw-r--r--   1 cloudera supergroup     736519 2022-11-22 08:11 /hdfs/vim4.txt
+
+//Объединить файлы в один и добавить его в HDFS
+cloudera@quickstart ~]$ hadoop fs -getmerge -nl /hdfs/vim1.txt /hdfs/vim2.txt /hdfs/vim3.txt /hdfs/vim4.txt /media/sf_Task_3/vim.txt
+[cloudera@quickstart ~]$ hadoop fs -copyFromLocal /media/sf_Task_3/vim.txt /hdfs/vim.txt
+ 
+// Изменить права доступа к файлу vim1.txt
+[cloudera@quickstart ~]$ hdfs dfs -chmod 744 /hdfs/vim1.txt
+[cloudera@quickstart ~]$ hdfs dfs -ls /hdfs
+Found 5 items
+-rw-r--r--   1 cloudera supergroup    2946080 2022-11-22 09:36 /hdfs/vim.txt
+-rwxr--r--   1 cloudera supergroup     736519 2022-11-22 08:09 /hdfs/vim1.txt
+-rw-r--r--   1 cloudera supergroup     736519 2022-11-22 08:10 /hdfs/vim2.txt
+-rw-r--r--   1 cloudera supergroup     736519 2022-11-22 08:10 /hdfs/vim3.txt
+-rw-r--r--   1 cloudera supergroup     736519 2022-11-22 08:11 /hdfs/vim4.txt
+ 
+//Вывести размер файлов
+[cloudera@quickstart ~]$ hdfs dfs -du -h /hdfs
+2.8 M    2.8 M    /hdfs/vim.txt
+719.3 K  719.3 K  /hdfs/vim1.txt
+719.3 K  719.3 K  /hdfs/vim2.txt
+719.3 K  719.3 K  /hdfs/vim3.txt
+719.3 K  719.3 K  /hdfs/vim4.txt
+
+//Изменить фактор репликации файлов на 2
+[cloudera@quickstart ~]$ hdfs dfs -setrep 2 /hdfs
+Replication 2 set: /hdfs/vim.txt
+Replication 2 set: /hdfs/vim1.txt
+Replication 2 set: /hdfs/vim2.txt
+Replication 2 set: /hdfs/vim3.txt
+Replication 2 set: /hdfs/vim4.txt
+[cloudera@quickstart ~]$ hdfs dfs -du -h /hdfs
+2.8 M    5.6 M  /hdfs/vim.txt
+719.3 K  1.4 M  /hdfs/vim1.txt
+719.3 K  1.4 M  /hdfs/vim2.txt
+719.3 K  1.4 M  /hdfs/vim3.txt
+719.3 K  1.4 M  /hdfs/vim4.txt
+
+//Подсчитать число строк в файле
+[cloudera@quickstart ~]$ hdfs dfs -cat /hdfs/vim.txt | wc -l
+13572
+[cloudera@quickstart ~]$ hdfs dfs -cat /hdfs/vim1.txt | wc -l
+3392
+[cloudera@quickstart ~]$ hdfs dfs -cat /hdfs/vim2.txt | wc -l
+3392
+[cloudera@quickstart ~]$ hdfs dfs -cat /hdfs/vim3.txt | wc -l
+3392
+[cloudera@quickstart ~]$ hdfs dfs -cat /hdfs/vim4.txt | wc -l
+3392
